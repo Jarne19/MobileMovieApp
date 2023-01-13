@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar color="success">
+    <ion-title>login</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/movies"></ion-back-button>
+   </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-item class="ion-margin-vertical" color="light" (click)="authService.signInWithGoogle()">
+  <div slot="start">
+    <ion-icon size="large" name="logo-google"></ion-icon>
+  </div>
+  <ion-label>Login in met Google</ion-label>
+</ion-item>
+<ion-item class="ion-margin-vertical" color="light" (click)="authService.signInWithGithub()">
+  <div slot="start">
+    <ion-icon size="large" name="logo-github"></ion-icon>
+  </div>
+  <ion-label>Login in met Github</ion-label>
+</ion-item>
+<ion-item *ngIf="isNative" class="ion-margin-vertical" color="light" (click)="showPhoneVerification()">
+  <div slot="start">
+    <ion-icon size="large" name="chatbox-ellipses"></ion-icon>
+  </div>
+  <ion-label>Login met je GSM nummer</ion-label>
+</ion-item>
+  <ion-content *ngIf="(authService.currentUser | async); let user">
+    <ion-item>
+      <ion-label>
+        <ion-list-header>
+          {{user.displayName}}
+        </ion-list-header>
+        <ion-note class="ion-margin-start">
+          {{user.email || ''}}
+        </ion-note>
+      </ion-label>
+    </ion-item>
+      <ion-list lines="none">
+        <ion-item (click)="authService.signOut()">
+          Logout
+        </ion-item>
+      </ion-list>
+  </ion-content>
+  <br>
+  <ion-card-content>
+    <ion-item>
+      <ion-input (ngModal)="user.email" placeholder="Username"></ion-input>
+    </ion-item>
+    <br>
+    <ion-item>
+      <ion-input (ngModal)="user.password" placeholder="Password" type="password"></ion-input>
+    </ion-item>
+    <br>
+    <ion-button expand="block" (click)="login()">Login</ion-button>
+    <br>
+    <a expand="block" (click)="register()">No account? register here</a>
+  </ion-card-content>

@@ -1,0 +1,78 @@
+<ion-app>
+  <ion-menu contentId="main-content">
+    <ion-header class="ion-margin-bottom">
+      <ion-toolbar color="success">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content *ngIf="(authService.currentUser | async); let user; else login">
+      <ion-item>
+        <ion-label>
+          <ion-text style="font-weight: bold;">
+            Welcome {{user.displayName}}!
+          </ion-text>
+          <br>
+          <ion-text>
+            {{user.email || ''}}
+          </ion-text>
+        </ion-label>
+      </ion-item>
+      <ion-list lines="none">
+        <ion-item routerLink="/favo-list">
+          Favorite movies
+        </ion-item>
+        <ion-item (click)="authService.signOut()">
+          Logout
+          <ion-icon class="ion-margin-start" name="log-out-outline"></ion-icon>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label>
+            Toggle Dark Theme
+          </ion-label>
+          <ion-toggle (ionChange)="onClick($event)" slot="end"></ion-toggle>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+    <ng-template #login>
+      <ion-content >
+      <ion-item>  
+        welcome login to use the whole app.
+      </ion-item>
+      <ion-item lines="none" routerLink="/login">
+        Login
+      <ion-icon size="large" name="log-in-outline"></ion-icon>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label>
+          Toggle Dark Theme
+        </ion-label>
+        <ion-toggle (ionChange)="onClick($event)" slot="end"></ion-toggle>
+      </ion-item>
+    </ion-content>
+    </ng-template>
+  </ion-menu>
+  <div class="ion-page" id="main-content">
+    <ion-header >
+      <ion-toolbar color="success">
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Movies</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-item button *ngFor="let item of movies" >
+          <ion-thumbnail  slot="start">
+            <img [src]="imageBaseUrl + '/w92' + item.poster_path">
+          </ion-thumbnail >
+          <ion-label [routerLink]="[item.id]">{{item.title}} <p>{{item.release_date | date:'y'}}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-infinite-scroll (ionInfinite)="loadMore($any($event))">
+       <ion-infinite-scroll-content loadingSpinner="lines" loadingText="Loading more movies..."></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    </ion-content>
+  </div>
+</ion-app>
